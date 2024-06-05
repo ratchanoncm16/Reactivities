@@ -36,18 +36,25 @@ export default class ActivityStore {
 
     loadActivity = async (id: string) => {
         let activity = this.getActivity(id);
-        if(activity) this.selectedActivity = activity;
+        if(activity) 
+        {
+            this.selectedActivity = activity;
+            return activity;
+        }
         else {
             this.setLoadingInitial(false);
             try {
                 activity = await agent.Activities.detail(id);
                 this.setActivity(activity);
-                this.selectedActivity = activity;
+                runInAction(() => {this.selectedActivity = activity;});
+                
                 this.setLoadingInitial(false);
+                return activity;
             } catch (error) {
                 console.log(error)
                 this.setLoadingInitial(false);
             }
+
         }
     }
 
@@ -120,23 +127,23 @@ export default class ActivityStore {
         }
     }
 
-    deleteActivity = async (id: string) => {
-        this.loading = true;
-        try {
-            await agent.Activities.delete(id);
-            runInAction(() => {
-                this.activityRegistry.delete(id);
-                if(this.selectedActivity?.id === id) this.cancelSelectedActivity();
-                this.loading = false;
-            })
-        } catch (error) {
-            runInAction(() => {
-                console.log(error)
-                this.loading = false;
-            })
+    // deleteActivity = async (id: string) => {
+    //     this.loading = true;
+    //     try {
+    //         await agent.Activities.delete(id);
+    //         runInAction(() => {
+    //             this.activityRegistry.delete(id);
+    //             if(this.selectedActivity?.id === id) this.cancelSelectedActivity();
+    //             this.loading = false;
+    //         })
+    //     } catch (error) {
+    //         runInAction(() => {
+    //             console.log(error)
+    //             this.loading = false;
+    //         })
             
-        }
-    }
+    //     }
+    // }
 
 
 }
