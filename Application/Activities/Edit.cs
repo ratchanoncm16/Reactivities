@@ -3,6 +3,7 @@ using AutoMapper;
 using Domain;
 using MediatR;
 using Persistence;
+using FluentValidation;
 
 namespace Application.Activities
 {
@@ -13,6 +14,14 @@ namespace Application.Activities
             public Activity Activity { get; set; }
         }
 
+         public class CommandVaildator : AbstractValidator<Command>  
+        {
+            public CommandVaildator()
+            {
+                RuleFor(x => x.Activity).SetValidator(new ActivityValidator());
+            }
+        }      
+        
         public class Handler : IRequestHandler<Command>
         {
         private readonly DataContext _context;
@@ -32,7 +41,11 @@ namespace Application.Activities
                 _mapper.Map(request.Activity, activity);
 
                 await _context.SaveChangesAsync();
+
+                //return Unit.Value;
             }
+
+            
         }
     }
 }
