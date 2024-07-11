@@ -21,21 +21,21 @@ axios.interceptors.response.use(async response => {
     const {data, status, config} = error.response as AxiosResponse;
     switch (status) {
         case 400:
-            if(config.method === 'get' && Object.prototype.hasOwnProperty.call(data.error, 'id')) {
-             router.navigate('/not-found');
-            }
-            if(data.errors){
-                const modalStateErrors = [];
-                for(const key in data.errors) {
-                    if(data.errors[key]){
-                        modalStateErrors.push(data.errors[key])
-                    }
-                }
-                throw modalStateErrors.flat();
-            } else {
-                toast.error(data);
-            }
-            //toast.error('bad request')
+            // if(config.method === 'get' && Object.prototype.hasOwnProperty.call(data.error, 'id')) {
+            //  router.navigate('/not-found');
+            // }
+            // if(data.errors){
+            //     const modalStateErrors = [];
+            //     for(const key in data.errors) {
+            //         if(data.errors[key]){
+            //             modalStateErrors.push(data.errors[key])
+            //         }
+            //     }
+            //     throw modalStateErrors.flat();
+            // } else {
+            //     toast.error(data);
+            // }
+            toast.error('bad request')
             break;
         case 401:
             toast.error('unauthorised')
@@ -48,9 +48,9 @@ axios.interceptors.response.use(async response => {
             router.navigate('/not-found');
             break;
         case 500:
-            store.commonStore.setServerError(data);
-            router.navigate('/server-error');
-            //toast.error('server error')
+            ///store.commonStore.setServerError(data);
+            //router.navigate('/server-error');
+            toast.error('server error')
             break;
     }
     return Promise.reject(error);
