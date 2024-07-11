@@ -14,7 +14,7 @@ import LoadingComponent from "../../../app/layout/LoadingComponent";
 import { observer } from "mobx-react-lite";
 import {  useParams } from "react-router-dom";
 import ActivityDetailHeader from "./ActivityDetailedHeader";
-import ActivityDetailInfo from "./AtivityDetailedInfo";
+import ActivityDetailInfo from "./ActivityDetailedInfo";
 import ActivityDetailChat from "./ActivityDetailedChat";
 import ActivityDetailSidebar from "./ActivityDetailedSidebar";
 
