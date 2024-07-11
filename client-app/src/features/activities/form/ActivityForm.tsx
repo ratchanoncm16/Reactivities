@@ -6,6 +6,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { Activity }  from "../../../app/models/activity"
 import LoadingComponent from "../../../app/layout/LoadingComponent";
 import {v4 as uuid} from 'uuid';
+import { Formik } from "formik";
 
 
 export default observer(function ActivityForm() {
@@ -61,6 +62,11 @@ export default observer(function ActivityForm() {
 
     return (
         <Segment clearing>
+            {/* <Formik initialValues={activity} onSubmit={values => console.log(values)}>
+                {({values, handleChange, handleSubmit}) => (
+                    
+                )}
+            </Formik> */}
             <Form onSubmit={handleSubmit} autoComplete='off'>
                 <Form.Input placeholder='Title' value={activity.title} name='title' onChange={handleInputCheange} />
                 <Form.TextArea placeholder='Description' name='description' onChange={handleInputCheange} />
