@@ -3,8 +3,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Application.Core;
+using Microsoft.AspNetCore.Authorization;
 namespace API.Controllers
 {
+    
     [ApiController]
     [Route("api/[controller]")]
     public class BaseApiController : ControllerBase

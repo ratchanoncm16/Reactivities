@@ -22,7 +22,7 @@ namespace API.Controllers
         // {
         //     return await Mediator.Send(new List.Query(), ct);
         // }
-        [Authorize]
+        // [Authorize]
         [HttpGet("{id}")] //api/activities/fdfdfdd
         public async Task<ActionResult<Activity>> GetActivity (Guid id)
         {
