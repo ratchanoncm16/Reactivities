@@ -1,4 +1,7 @@
 
+using Application.Core;
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Domain;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -9,18 +12,22 @@ namespace Application.Activities
 {
     public class List
     {
-        public class Query : IRequest<List<Activity>> {}
+        public class Query : IRequest <Result<List<ActivityDto>>> //<Result<List<Activity>>>
+        {
 
-        public class Handler : IRequestHandler<Query, List<Activity>>
+        }
+
+        public class Handler : IRequestHandler<Query, Result<List<ActivityDto>>>
         {
             private readonly DataContext _context;
             //private readonly ILogger<List> _logger;
-            public Handler(DataContext context) //, ILogger<List> logger
+        private readonly IMapper _mapper;
+            public Handler(DataContext context, IMapper mapper) 
             {
-                //_logger = logger;
+                _mapper = mapper;
                 _context = context;
             }
-            public async Task<List<Activity>> Handle(Query request, CancellationToken cancellationToken) //, CancellationToken cancellationToken
+            public async Task<Result<List<ActivityDto>>> Handle(Query request, CancellationToken cancellationToken) //, CancellationToken cancellationToken
             {
                 //cancel token
                 // try
@@ -36,7 +43,17 @@ namespace Application.Activities
                 // {
                 //     _logger.LogInformation("Task was cancelled");
                 // }
-                return await _context.Activities.ToListAsync();
+
+                var activities = await _context.Activities
+                // .Include(a => a.Attendees)
+                // .ThenInclude(u => u.AppUser)
+                    .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider)
+                    .ToListAsync(cancellationToken);
+                
+                var activitiesToReturn = _mapper.Map<List<ActivityDto>>(activities);
+
+                //return await _context.Activities.ToListAsync();
+                return Result<List<ActivityDto>>.Success(activitiesToReturn); //  _context.Activities.ToListAsync();
             }
         }
     }
