@@ -45,15 +45,13 @@ namespace Application.Activities
                 // }
 
                 var activities = await _context.Activities
-                // .Include(a => a.Attendees)
-                // .ThenInclude(u => u.AppUser)
                     .ProjectTo<ActivityDto>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken);
                 
-                var activitiesToReturn = _mapper.Map<List<ActivityDto>>(activities);
+                //var activitiesToReturn = _mapper.Map<List<ActivityDto>>(activities);
 
                 //return await _context.Activities.ToListAsync();
-                return Result<List<ActivityDto>>.Success(activitiesToReturn); //  _context.Activities.ToListAsync();
+                return Result<List<ActivityDto>>.Success(activities); //  _context.Activities.ToListAsync();
             }
         }
     }
