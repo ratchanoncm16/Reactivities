@@ -40,6 +40,7 @@ export default observer(function ActivityDetailedHeader({ activity }: Props) {
                                 <p>
                                     Hosted by <strong>Bob</strong>
                                 </p>
+                                
                             </Item.Content>
                         </Item>
                     </Item.Group>
