@@ -10,7 +10,7 @@ import ActivityFilters from "./ActivityFilter";
 
 
 export default observer(function ActivityDashboard() {
-
+        //โหลด activity
         const {activityStore} = useStore();
         const {loadActivities, activityRegistry} = activityStore;
         //const {selectedActivity, editMode} = activityStore

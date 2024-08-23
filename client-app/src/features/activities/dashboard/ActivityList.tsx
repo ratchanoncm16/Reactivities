@@ -7,6 +7,7 @@ import ActivityListItem from "./ActivityListItem";
 
 export default observer(function ActivityList() {
 
+    //โหลด activity store
     const { activityStore } = useStore();
     const { groupActivities } = activityStore;
     //const {deleteActivity, activityByDate, loading} = activityStore;
