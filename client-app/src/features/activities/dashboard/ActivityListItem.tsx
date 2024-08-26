@@ -54,6 +54,7 @@ export default function ActivityListItem({ activity }: Props) {
                                     </Label>
                                 </Item.Description>
                             )}
+                            <Label>{activity.isHost}</Label>
                         </Item.Content>
                     </Item>
                 </Item.Group>
