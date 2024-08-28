@@ -9,7 +9,7 @@ export default observer(function ActivityList() {
 
     //โหลด activity store
     const { activityStore } = useStore();
-    const { groupActivities } = activityStore;
+    const { groupedActivities } = activityStore;
     //const {deleteActivity, activityByDate, loading} = activityStore;
 
     // const [target, setTarget] = useState('');
@@ -22,7 +22,7 @@ export default observer(function ActivityList() {
     return (
 
         <>
-            {groupActivities.map(([group, activities]) => (
+            {groupedActivities.map(([group, activities]) => (
                 <Fragment key={group}>
                     <Header sub color='teal'>
                         {group}
