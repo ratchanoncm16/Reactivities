@@ -1,10 +1,11 @@
-import { makeAutoObservable, runInAction } from "mobx";
+import { makeAutoObservable,reaction,  runInAction } from "mobx";
 import { Activity, ActivityFormValues } from "../models/activity";
 import agent from "../api/agent";
 import {v4 as uuid} from "uuid"
 import {format} from 'date-fns'
 import { store } from "./store";
 import { Profile } from "../models/profile";
+import { Pagination, PagingParams } from "../models/pagination";
 
 export default class ActivityStore {
     activityRegistry = new Map<string, Activity>();
@@ -12,25 +13,102 @@ export default class ActivityStore {
     editMode = false;
     loading = false;
     loadingInitial = false;
+    pagination: Pagination | null = null;
+    pagingParams = new PagingParams();
+    predicate = new Map().set('all', true);
+    
 
     constructor() {
-        makeAutoObservable(this)
+        makeAutoObservable(this);
+
+        reaction(
+            () => this.predicate.keys(),
+            () => {
+                this.pagingParams = new PagingParams();
+                this.activityRegistry.clear();
+                this.loadActivities();
+            }
+        )
+
     }
 
-    get activityByDate() {
-        return Array.from(this.activityRegistry.values()).sort((a, b) => 
-            // Date.parse(a.date)- Date.parse(b.date));
-        a.date!.getTime() - b.date!.getTime());
+
+    setPagingParams = (pagingParams: PagingParams) => {
+        this.pagingParams = pagingParams;
     }
-    get groupActivities() {
+
+    setPredicate = (predicate: string, value: string | Date) => {
+        const resetPredicate = () => {
+            this.predicate.forEach((value, key) => {
+                if (key !== 'startDate') this.predicate.delete(key);
+            })
+        }
+
+        switch (predicate) {
+            case 'all':
+                resetPredicate();
+                this.predicate.set('all', true);
+                break;
+            case 'isGoing':
+                resetPredicate();
+                this.predicate.set('isGoing', true);
+                break;
+            case 'isHost':
+                resetPredicate();
+                this.predicate.set('isHost', true);
+                break;
+            case 'startDate':
+                this.predicate.delete('startDate');
+                this.predicate.set('startDate', value)
+
+        }
+    }
+
+    get axiosParams() {
+        const params = new URLSearchParams();
+        params.append('pageNumber', this.pagingParams.pageNumber.toString());
+        params.append('pageSize', this.pagingParams.pageSize.toString());
+        this.predicate.forEach((value, key) => {
+            if (key === 'startDate') {
+                params.append(key, (value as Date).toISOString())
+            } else {
+                params.append(key, value);
+            }
+        })
+        return params;
+    }
+
+
+    get activitiesByDate() {
+        return Array.from(this.activityRegistry.values()).sort((a, b) =>
+            a.date!.getTime() - b.date!.getTime());
+    }
+
+    get groupedActivities() {
         return Object.entries(
-            this.activityByDate.reduce((activities, activity) => {
-                const date = format(activity.date!, 'dd MMM yyyy'); //const date = activity.date
-                activities[date!] = activities[date!] ? [...activities[date!], activity] : [activity];
+            this.activitiesByDate.reduce((activities, activity) => {
+                const date = format(activity.date!, 'dd MMMM yyyy');
+                activities[date] = activities[date] ? [...activities[date], activity] : [activity];
                 return activities;
-            }, {} as {[key:string]: Activity[]})
+            }, {} as { [key: string]: Activity[] })
         )
     }
+
+    // get activitiesByDate() {
+    //     return Array.from(this.activityRegistry.values()).sort((a, b) =>
+    //         a.date!.getTime() - b.date!.getTime());
+    // }
+
+
+    // get groupedActivities() {
+    //     return Object.entries(
+    //         this.activityByDate.reduce((activities, activity) => {
+    //             const date = format(activity.date!, 'dd MMM yyyy'); //const date = activity.date
+    //             activities[date] = activities[date] ? [...activities[date], activity] : [activity];
+    //             return activities;
+    //         }, {} as {[key:string]: Activity[]})
+    //     )
+    // }
 
     loadActivities = async () => {
         this.setLoadingInitial(true);
@@ -191,23 +269,18 @@ export default class ActivityStore {
             runInAction(() => this.loading = false);
         }
     }
-    // deleteActivity = async (id: string) => {
-    //     this.loading = true;
-    //     try {
-    //         await agent.Activities.delete(id);
-    //         runInAction(() => {
-    //             this.activityRegistry.delete(id);
-    //             if(this.selectedActivity?.id === id) this.cancelSelectedActivity();
-    //             this.loading = false;
-    //         })
-    //     } catch (error) {
-    //         runInAction(() => {
-    //             console.log(error)
-    //             this.loading = false;
-    //         })
-            
-    //     }
-    // }
+
+
+    updateAttendeeFollowing = (username: string) => {
+        this.activityRegistry.forEach(activity => {
+            activity.attendees.forEach(attendee => {
+                if (attendee.username === username) {
+                    attendee.following ? attendee.followersCount-- : attendee.followersCount++;
+                    attendee.following = !attendee.following;
+                }
+            })
+        })
+    }
 
 
 }
