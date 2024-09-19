@@ -22,7 +22,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Activity", b =>
                 {
-                    b.Property<Guid>("TheId")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
@@ -44,7 +44,7 @@ namespace Persistence.Migrations
                     b.Property<string>("Venue")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("TheId");
+                    b.HasKey("Id");
 
                     b.ToTable("Activities");
                 });

@@ -10,7 +10,7 @@ import ActivityFilters from "./ActivityFilter";
 
 
 export default observer(function ActivityDashboard() {
-
+        //โหลด activity
         const {activityStore} = useStore();
         const {loadActivities, activityRegistry} = activityStore;
         //const {selectedActivity, editMode} = activityStore
@@ -19,7 +19,7 @@ export default observer(function ActivityDashboard() {
             if(activityRegistry.size <= 1) loadActivities();
         }, [loadActivities])
       
-        if (activityStore.loadingInitial) { return <LoadingComponent content='Loading app' />
+        if (activityStore.loadingInitial) { return <LoadingComponent content='Loading activities...' />
           
         }
 

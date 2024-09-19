@@ -15,7 +15,7 @@ namespace Persistence.Migrations
                 name: "Activities",
                 columns: table => new
                 {
-                    TheId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Title = table.Column<string>(type: "TEXT", nullable: true),
                     Date = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Description = table.Column<string>(type: "TEXT", nullable: true),
@@ -25,7 +25,7 @@ namespace Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Activities", x => x.TheId);
+                    table.PrimaryKey("PK_Activities", x => x.Id);
                 });
         }
 
