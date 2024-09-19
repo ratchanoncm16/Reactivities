@@ -43,7 +43,7 @@ export default observer(function ActivityDetailedChat({activityId}: Props) {
                                 {comment.displayName}
                             </Comment.Author>
                             <Comment.Metadata>
-                                <div>{formatDistanceToNow(comment.createdAt)}</div>
+                                <div>{formatDistanceToNow(comment.createdAt)} ago</div>
                             </Comment.Metadata>
                             <Comment.Text>{comment.body}</Comment.Text>
                            

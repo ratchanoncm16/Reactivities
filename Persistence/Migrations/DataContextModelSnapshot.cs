@@ -139,8 +139,9 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Comment", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("ActivityId")
                         .HasColumnType("TEXT");

@@ -31,15 +31,11 @@ namespace Persistence
                 .HasOne(u => u.Activity)
                 .WithMany(a => a.Attendees)
                 .HasForeignKey(aa => aa.ActivityId);
-<<<<<<< Updated upstream
 
                 builder.Entity<Comment>()
                 .HasOne(a => a.Activity)
                 .WithMany(c => c.Comments)
                 .OnDelete(DeleteBehavior.Cascade);
-=======
-                
->>>>>>> Stashed changes
         }
     }
 }

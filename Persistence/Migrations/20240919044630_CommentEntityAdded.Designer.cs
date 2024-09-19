@@ -11,7 +11,7 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240828045017_CommentEntityAdded")]
+    [Migration("20240919044630_CommentEntityAdded")]
     partial class CommentEntityAdded
     {
         /// <inheritdoc />
@@ -142,8 +142,9 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Comment", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
 
                     b.Property<Guid?>("ActivityId")
                         .HasColumnType("TEXT");
