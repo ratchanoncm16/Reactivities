@@ -1,1 +1,4 @@
-{}
+{
+    "appService.defaultWebAppToDeploy": "None",
+    "appService.deploySubpath": "client-app"
+}
