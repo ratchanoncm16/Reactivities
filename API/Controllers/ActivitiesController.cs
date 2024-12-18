@@ -13,10 +13,12 @@ namespace API.Controllers
     public class ActivitiesController : BaseApiController
     {
         [HttpGet] //api/activities
-        public async Task<IActionResult> GetActivities()
+        //public async Task<IActionResult> GetActivities()
+        public async Task<IActionResult> GetActivities([FromQuery] ActivityParams parameters)
         {
             //return await Mediator.Send(new List.Query());
-            return HandleResult(await Mediator.Send(new List.Query()));
+            //return HandleResult(await Mediator.Send(new List.Query()));
+            return HandlePagedResult(await Mediator.Send(new List.Query { Params = parameters }));
         }
       
         // [Authorize]

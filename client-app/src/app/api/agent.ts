@@ -1,18 +1,27 @@
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { AxiosError, AxiosHeaders, AxiosResponse } from 'axios'
 import { Activity, ActivityFormValues } from '../models/activity';
 import { router } from '../router/Router';
 import { toast } from 'react-toastify';
 import { store } from '../stores/store';
 import { User, UserFormValues } from '../models/user';
+import { PaginatedResult } from "../models/pagination";
 import { Photo, Profile, UserActivity } from '../models/profile';
+
+
+
 
 const sleep = (delay: number) => {
     return new Promise((resolve) => {
         setTimeout(resolve, delay)
-    })
-}
+    });
+};
 
-axios.defaults.baseURL = 'http://localhost:5000/api/';
+// axios.defaults.baseURL =  'http://localhost:5000/api/'; //process.env.REACT_APP_API_URL; 
+const apiUrl = process.env.REACT_APP_API_URL;
+console.log(`API URL: ${apiUrl}`);
+
+axios.defaults.baseURL =  process.env.REACT_APP_API_URL; 
+
 
 axios.interceptors.request.use(config => {
     const token = store.commonStore.token;
@@ -20,10 +29,18 @@ axios.interceptors.request.use(config => {
     return config;
 })
 
-axios.interceptors.response.use(async response => {
-    
-        await sleep(1000);
-        return response;
+axios.interceptors.response.use(
+    async response => {
+    if (process.env.NODE_ENV === "development") await sleep(1000);
+    const pagination = response.headers["pagination"];
+    if (pagination) {
+        response.data = new PaginatedResult(
+            response.data,
+            JSON.parse(pagination)
+        );
+        return response as AxiosResponse<PaginatedResult<any>>;
+    }
+    return response;
    
 },(error: AxiosError) => {
     const {data, status, config} = error.response as AxiosResponse;

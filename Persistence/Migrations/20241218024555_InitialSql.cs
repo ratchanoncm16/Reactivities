@@ -268,6 +268,30 @@ namespace Persistence.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "UserFollowings",
+                columns: table => new
+                {
+                    ObserverId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    TargetId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserFollowings", x => new { x.ObserverId, x.TargetId });
+                    table.ForeignKey(
+                        name: "FK_UserFollowings_AspNetUsers_ObserverId",
+                        column: x => x.ObserverId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserFollowings_AspNetUsers_TargetId",
+                        column: x => x.TargetId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ActivityAttendees_ActivityId",
                 table: "ActivityAttendees",
@@ -331,6 +355,11 @@ namespace Persistence.Migrations
                 name: "IX_RefreshToken_AppUserId",
                 table: "RefreshToken",
                 column: "AppUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserFollowings_TargetId",
+                table: "UserFollowings",
+                column: "TargetId");
         }
 
         /// <inheritdoc />
@@ -362,6 +391,9 @@ namespace Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "RefreshToken");
+
+            migrationBuilder.DropTable(
+                name: "UserFollowings");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
