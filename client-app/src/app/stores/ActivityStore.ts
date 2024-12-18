@@ -110,19 +110,37 @@ export default class ActivityStore {
     //     )
     // }
 
+    // loadActivities = async () => {
+    //     this.setLoadingInitial(true);
+    //     try {
+    //         const activities = await agent.Activities.list(); // api get
+    //         activities.forEach(activity => {
+    //             this.setActivity(activity);
+    //         })
+    //         this.setLoadingInitial(false);
+    //     } catch (error) {
+    //         console.log(error)
+    //         this.setLoadingInitial(false);
+
+    //     }
+    // }
     loadActivities = async () => {
-        this.setLoadingInitial(true);
+        this.loadingInitial = true;
         try {
-            const activities = await agent.Activities.list(); // api get
-            activities.forEach(activity => {
+            const result = await agent.Activities.list(this.axiosParams);
+            result.data.forEach((activity: Activity) => {
                 this.setActivity(activity);
             })
+            this.setPagination(result.pagination);
             this.setLoadingInitial(false);
         } catch (error) {
-            console.log(error)
             this.setLoadingInitial(false);
-
+            console.log(error);
         }
+    }
+    
+    setPagination = (pagination: Pagination) => {
+        this.pagination = pagination;
     }
 
     loadActivity = async (id: string) => {

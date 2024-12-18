@@ -77,8 +77,6 @@ namespace Application.Activities
                     await PagedList<ActivityDto>.CreateAsync(query, request.Params.PageNumber, request.Params.PageSize)
                 );
 
-
-                
             }
         }
     }
